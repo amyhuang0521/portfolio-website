@@ -1417,7 +1417,7 @@ timelineWrap.querySelectorAll('.timeline-card, .timeline-node').forEach(function
    4) Portfolio tabs
    ============================================================ */
 var CONTENT_WORKS=[
-  {tag:'深度报道',title:'电力赋能乡村振兴',desc:'以四川郫县豆瓣酱产业为切入点，呈现农网改造前后生产用电的稳定性变化，以及由此焕新的乡村产业。'},
+  {tag:'深度报道',title:'电力赋能乡村振兴',desc:'以四川郫县豆瓣酱产业为切入点，呈现农网改造前后生产用电的稳定性变化，以及由此焕新的乡村产业。',links:[{t:'阅读全文 ↗',href:'https://mp.weixin.qq.com/s/f_rhkK_OUAoUfXb3xHY2sQ'}]},
   {tag:'公众号运营',title:'中美中心品牌传播稿件',desc:'负责中心中英文官网、微信公众号、视频号、B站等内容更新，主导策划、拍摄、剪辑视频与公众号文章。（具体作品链接待补充）'},
   {tag:'教材营销',title:'《高职美育教程》宣传策划',desc:'围绕美育主题制造内容吸引目标用户，提升教材咨询量与试用申请量。'},
   {tag:'学术论文',title:'科幻文学海外传播机制研究',desc:'5 万字课题报告，结合文献计量、300+ 海外读者问卷与 15 位国际专家访谈，获论文比赛二等奖并受邀参加世界科幻大会。'},
@@ -1433,7 +1433,7 @@ var AI_WORKS={
 };
 
 document.getElementById('tab-content').innerHTML='<div class="work-grid">'+CONTENT_WORKS.map(function(w){
-  var links=(w.links||[]).map(function(l){return '<a href="#">'+l.t+' ↗</a>';}).join('');
+  var links=(w.links||[]).map(function(l){return '<a href="'+(l.href||'#')+'" target="_blank" rel="noopener">'+(l.t||'查看 ↗')+'</a>';}).join('');
   return '<div class="work-card">'+
     '<span class="wk-tag">'+w.tag+'</span>'+
     '<h4>'+w.title+'</h4>'+
