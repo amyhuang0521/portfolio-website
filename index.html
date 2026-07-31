@@ -1,0 +1,1783 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>黄钰茜 · 个人作品集 | Huang Yuxi Portfolio</title>
+<style>
+/* ============================================================
+   Design Tokens — Light Blue & Soft Neon
+   ============================================================ */
+:root{
+  --bg:#eaf2fb;--bg-2:#dcebfb;--bg-3:#cfe3f9;
+  --surface:rgba(255,255,255,.78);--surface-2:rgba(255,255,255,.94);
+  --border:rgba(28,72,130,.14);--border-strong:rgba(28,72,130,.28);
+  --text:#16263f;--text-dim:#4a5d78;--text-faint:#8497b0;
+  --neon:#2f6fed;--neon-soft:rgba(47,111,237,.20);--neon-glow:rgba(47,111,237,.32);
+  --teal:#11a89a;--gold:#d99417;--rose:#e84c6d;
+  --radius:18px;--maxw:1180px;--ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Helvetica Neue",Arial,sans-serif;
+  line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--neon);color:#fff}
+
+/* Background orbs */
+.bg-orb{
+  position:fixed;border-radius:50%;filter:blur(90px);opacity:.45;z-index:0;pointer-events:none;
+  background:radial-gradient(circle,var(--neon-glow),transparent 70%);
+  animation:breathe 7s var(--ease) infinite alternate;
+}
+.orb-a{width:520px;height:520px;top:-120px;right:-80px}
+.orb-b{width:420px;height:420px;bottom:10%;left:-140px;animation-delay:-3s;opacity:.30}
+@keyframes breathe{
+  0%{transform:scale(.92) translateY(0);opacity:.30}
+  100%{transform:scale(1.08) translateY(-18px);opacity:.55}
+}
+
+/* ============================================================
+   Fixed Navigation
+   ============================================================ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:60;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:16px clamp(20px,5vw,56px);
+  background:rgba(234,242,251,.72);
+  backdrop-filter:blur(18px) saturate(160%);
+  -webkit-backdrop-filter:blur(18px) saturate(160%);
+  border-bottom:1px solid var(--border);
+}
+.brand{font-weight:600;letter-spacing:.5px;font-size:16px}
+.brand span{color:var(--neon)}
+.menu-btn{
+  width:42px;height:42px;border-radius:50%;border:1px solid var(--border);
+  background:var(--surface);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .3s var(--ease);position:relative;z-index:62;
+}
+.menu-btn:hover{border-color:var(--neon-soft);box-shadow:0 0 20px -6px var(--neon-glow)}
+.menu-btn span{
+  display:block;width:18px;height:1.5px;background:var(--text);border-radius:1px;
+  position:relative;transition:all .35s var(--ease);
+}
+.menu-btn span::before,.menu-btn span::after{
+  content:"";position:absolute;left:0;width:18px;height:1.5px;background:var(--text);border-radius:1px;transition:all .35s var(--ease);
+}
+.menu-btn span::before{top:-5.5px}.menu-btn span::after{top:5.5px}
+.menu-btn.open span{background:transparent}
+.menu-btn.open span::before{top:0;transform:rotate(45deg)}
+.menu-btn.open span::after{top:0;transform:rotate(-45deg)}
+
+/* Full-screen overlay menu */
+.menu-overlay{
+  position:fixed;inset:0;z-index:61;background:var(--bg);
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  opacity:0;pointer-events:none;transition:opacity .45s var(--ease);
+  padding:80px 20px;
+}
+.menu-overlay.open{opacity:1;pointer-events:auto}
+.menu-overlay .bg-orb{position:absolute;z-index:-1}
+.menu-list{list-style:none;text-align:center;max-width:900px;width:100%}
+.menu-list li{
+  margin:0;opacity:0;transform:translateY(20px);transition:all .5s var(--ease);
+  border-bottom:1px solid var(--border);
+}
+.menu-list li:first-child{border-top:1px solid var(--border)}
+.menu-overlay.open .menu-list li{opacity:1;transform:none}
+.menu-overlay.open .menu-list li:nth-child(1){transition-delay:.08s}
+.menu-overlay.open .menu-list li:nth-child(2){transition-delay:.16s}
+.menu-overlay.open .menu-list li:nth-child(3){transition-delay:.24s}
+.menu-overlay.open .menu-list li:nth-child(4){transition-delay:.32s}
+.menu-overlay.open .menu-list li:nth-child(5){transition-delay:.40s}
+.menu-list a{
+  display:block;padding:26px 0;position:relative;
+}
+.menu-list .menu-en{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;
+  font-size:clamp(38px,8vw,76px);font-weight:500;letter-spacing:-1px;
+  color:var(--text);line-height:1.05;transition:color .3s;
+}
+.menu-list .menu-cn{
+  font-size:12px;color:var(--text-faint);letter-spacing:4px;text-transform:uppercase;margin-top:8px;
+}
+.menu-list a::after{
+  content:"";position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
+  width:0;height:1px;background:var(--neon);transition:width .4s var(--ease);
+}
+.menu-list a:hover .menu-en{color:var(--neon)}
+.menu-list a:hover::after{width:140px}
+
+/* ============================================================
+   Scroll snap for first two screens
+   ============================================================ */
+main{position:relative;z-index:2}
+.snap-section{
+  min-height:100vh;height:100vh;scroll-snap-align:start;
+  display:flex;flex-direction:column;justify-content:center;
+  position:relative;overflow:hidden;
+}
+html{scroll-snap-type:y proximity}
+
+/* ============================================================
+   Common section styles
+   ============================================================ */
+section{position:relative;z-index:2;padding:clamp(80px,10vw,140px) clamp(20px,5vw,56px)}
+.wrap{max-width:var(--maxw);margin:0 auto;width:100%}
+.sec-head{text-align:center;margin-bottom:clamp(40px,6vw,70px)}
+.sec-eyebrow{
+  display:inline-block;font-size:11px;letter-spacing:3.5px;text-transform:uppercase;
+  color:var(--neon);margin-bottom:14px;font-weight:600;
+}
+.sec-title{
+  font-size:clamp(30px,4.8vw,52px);font-weight:600;letter-spacing:-.8px;line-height:1.15;margin-bottom:10px;
+}
+.sec-title .cn{display:block;font-size:.42em;letter-spacing:4px;color:var(--text-faint);font-weight:500;margin-top:8px;text-transform:uppercase;}
+.sec-lead{color:var(--text-dim);max-width:640px;font-size:15.5px;margin:0 auto;line-height:1.75}
+
+.reveal{opacity:0;transform:translateY(34px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+
+/* ============================================================
+   1. Welcome / Hero
+   ============================================================ */
+#welcome{padding-top:70px}
+.welcome-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:clamp(36px,6vw,80px);
+  align-items:center;max-width:1280px;margin:0 auto;width:100%;
+}
+.welcome-left{z-index:3}
+.welcome-kicker{font-size:12px;letter-spacing:3px;color:var(--neon);text-transform:uppercase;margin-bottom:18px}
+.welcome-title{
+  font-size:clamp(40px,6.5vw,78px);font-weight:700;line-height:1.05;letter-spacing:-2px;margin-bottom:18px;
+}
+.welcome-title .line{display:block}
+.welcome-title .cn-part{
+  font-size:.5em;font-weight:500;letter-spacing:-.5px;color:var(--text-dim);margin-top:8px;
+}
+.welcome-sub{
+  font-size:clamp(16px,2vw,21px);color:var(--text-dim);max-width:520px;line-height:1.7;margin-bottom:32px;
+}
+.welcome-scroll{
+  display:inline-flex;align-items:center;gap:12px;font-size:12px;color:var(--text-faint);letter-spacing:2px;
+}
+.welcome-scroll .arrow{
+  display:block;width:1px;height:34px;background:linear-gradient(var(--neon),transparent);
+  animation:floaty 2.4s ease-in-out infinite;
+}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+
+.welcome-photo{
+  position:relative;width:100%;aspect-ratio:3/4;max-height:78vh;border-radius:var(--radius);
+  overflow:hidden;box-shadow:0 30px 70px -30px rgba(20,50,90,.35);
+}
+.welcome-photo img{width:100%;height:100%;object-fit:cover;object-position:50% 55%;transform:scale(1.08)}
+.welcome-photo::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(10,20,35,.35) 0%,rgba(10,20,35,.10) 40%,transparent 70%);
+}
+.welcome-photo-info{
+  position:absolute;bottom:0;left:0;right:0;padding:26px 22px;
+  background:linear-gradient(transparent,rgba(10,15,25,.85));
+  color:#fff;
+}
+.welcome-photo-info .loc{font-size:12px;opacity:.85;letter-spacing:1px;margin-bottom:4px}
+.welcome-photo-info .caption{font-size:14px;opacity:.9}
+
+/* ============================================================
+   2. Education
+   ============================================================ */
+#education{background:linear-gradient(180deg,var(--bg),var(--bg-2))}
+.edu-layout{
+  display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(40px,6vw,80px);align-items:center;
+  max-width:1200px;margin:0 auto;
+}
+.edu-visual{
+  position:relative;max-width:480px;margin:0 auto;width:100%;
+}
+.edu-photo{
+  width:100%;border-radius:var(--radius);overflow:hidden;
+  box-shadow:0 28px 60px -24px rgba(20,50,90,.35);
+}
+.edu-photo img{width:100%;height:auto;display:block}
+.edu-path{
+  position:absolute;bottom:-20px;right:-20px;background:var(--surface-2);
+  border:1px solid var(--border);border-radius:16px;padding:18px 22px;
+  box-shadow:0 16px 40px -18px rgba(20,50,90,.25);
+  min-width:220px;
+}
+.edu-path-title{font-size:12px;color:var(--neon);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+.edu-path-row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:14px;font-weight:600}
+.edu-path-row .dot{width:8px;height:8px;border-radius:50%;background:var(--neon)}
+.edu-path-row .plane{font-size:18px}
+.edu-path-line{height:2px;background:linear-gradient(90deg,var(--neon),var(--teal));flex:1;border-radius:1px}
+
+.edu-content h2{font-size:clamp(28px,4vw,44px);font-weight:600;line-height:1.15;margin-bottom:16px}
+.edu-content h2 .cn{display:block;font-size:.45em;color:var(--text-faint);letter-spacing:3px;text-transform:uppercase;margin-top:8px}
+.edu-content .lead{color:var(--text-dim);font-size:15.5px;line-height:1.75;margin-bottom:30px}
+.edu-cards{display:flex;flex-direction:column;gap:16px}
+.edu-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px 24px;
+  transition:transform .4s var(--ease),box-shadow .4s,border-color .4s;
+}
+.edu-card:hover{transform:translateY(-3px);border-color:var(--neon-soft);box-shadow:0 14px 36px -18px var(--neon-glow)}
+.edu-card .school{font-size:17px;font-weight:600;margin-bottom:4px}
+.edu-card .prog{font-size:14px;color:var(--neon);margin-bottom:8px}
+.edu-card .detail{font-size:13px;color:var(--text-dim);line-height:1.65}
+.edu-card .tags{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px}
+.edu-card .tag{font-size:11px;color:var(--teal);border:1px solid rgba(17,168,154,.25);border-radius:999px;padding:3px 10px}
+
+/* ============================================================
+   3. Internship — Vertical Timeline
+   ============================================================ */
+.timeline-wrap{position:relative;max-width:980px;margin:0 auto;padding:30px 0}
+.timeline-line{
+  position:absolute;left:50%;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--neon),var(--teal));
+  transform:translateX(-50%);border-radius:1px;
+}
+/* Soft skills */
+.soft-skills{max-width:980px;margin:60px auto 0}
+.soft-title{font-size:20px;font-weight:600;margin-bottom:22px;text-align:center}
+.soft-title span{font-size:12px;color:var(--text-faint);letter-spacing:2px;text-transform:uppercase;margin-left:8px}
+.soft-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+@media(max-width:760px){.soft-grid{grid-template-columns:1fr}}
+.soft-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:26px 24px;
+  box-shadow:0 14px 36px -20px rgba(20,50,90,.18);transition:transform .4s var(--ease),box-shadow .4s var(--ease);
+}
+.soft-card:hover{transform:translateY(-4px);box-shadow:0 22px 50px -22px rgba(20,50,90,.28)}
+.soft-icon{
+  width:46px;height:46px;border-radius:13px;background:linear-gradient(135deg,var(--neon-soft),rgba(17,168,154,.14));
+  display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:14px;
+}
+.soft-card h4{font-size:16px;font-weight:600;margin-bottom:10px}
+.soft-card p{font-size:13px;color:var(--text-dim);line-height:1.7}
+.soft-card .soft-ev{
+  margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);font-size:12px;color:var(--text-faint);
+}
+.timeline-item{position:relative;margin:50px 0;display:flex;align-items:center;min-height:120px}
+.timeline-item:nth-child(odd){flex-direction:row-reverse}
+.timeline-card{
+  width:42%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:24px 26px;cursor:pointer;transition:all .4s var(--ease);
+  box-shadow:0 12px 30px -18px rgba(20,50,90,.2);
+}
+.timeline-card:hover{transform:translateY(-4px) scale(1.02);border-color:var(--neon-soft);box-shadow:0 20px 46px -20px var(--neon-glow)}
+.timeline-card .date{font-size:12px;color:var(--neon);letter-spacing:1px;margin-bottom:8px;font-weight:600}
+.timeline-card .company{font-size:18px;font-weight:600;line-height:1.3;margin-bottom:4px}
+.timeline-card .role{font-size:13.5px;color:var(--text-dim);margin-bottom:10px}
+.timeline-card .preview{font-size:12.5px;color:var(--text-faint);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.timeline-node{
+  position:absolute;left:50%;transform:translateX(-50%);
+  width:20px;height:20px;border-radius:50%;background:#fff;border:4px solid var(--neon);
+  z-index:3;box-shadow:0 0 0 6px rgba(47,111,237,.12);transition:all .35s var(--ease);
+}
+.timeline-item:hover .timeline-node{transform:translateX(-50%) scale(1.25);box-shadow:0 0 0 10px rgba(47,111,237,.16)}
+.timeline-connector{
+  position:absolute;left:50%;top:50%;height:1px;width:8%;background:var(--border-strong);transform:translateY(-50%);
+}
+.timeline-item:nth-child(odd) .timeline-connector{margin-left:0;left:42%}
+.timeline-item:nth-child(even) .timeline-connector{left:50%}
+
+/* Internship detail panel */
+.detail-panel{
+  position:fixed;top:0;right:0;bottom:0;width:min(560px,92vw);background:var(--surface-2);
+  border-left:1px solid var(--border);z-index:80;transform:translateX(105%);
+  transition:transform .5s var(--ease);box-shadow:-20px 0 60px -30px rgba(20,40,70,.35);
+  display:flex;flex-direction:column;
+}
+.detail-panel.open{transform:translateX(0)}
+.detail-panel-backdrop{
+  position:fixed;inset:0;background:rgba(10,20,35,.45);z-index:79;opacity:0;pointer-events:none;
+  transition:opacity .4s var(--ease);backdrop-filter:blur(2px);
+}
+.detail-panel-backdrop.open{opacity:1;pointer-events:auto}
+.dp-header{
+  padding:28px 30px 20px;border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:flex-start;gap:16px;
+}
+.dp-close{
+  width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:transparent;
+  color:var(--text-dim);font-size:22px;line-height:1;cursor:pointer;transition:all .3s;flex-shrink:0;
+}
+.dp-close:hover{border-color:var(--neon);color:var(--neon);transform:rotate(90deg)}
+.dp-kicker{font-size:11px;color:var(--neon);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.dp-title{font-size:22px;font-weight:600;line-height:1.25;margin-bottom:4px}
+.dp-org{font-size:13px;color:var(--text-dim)}
+.dp-body{flex:1;overflow-y:auto;padding:26px 30px 40px}
+.dp-section{margin-bottom:26px}
+.dp-section h4{font-size:13px;color:var(--neon);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
+.dp-section p,.dp-section li{font-size:13.5px;color:var(--text-dim);line-height:1.8}
+.dp-section ul{list-style:none;padding:0}
+.dp-section li{padding-left:18px;position:relative;margin-bottom:8px}
+.dp-section li::before{content:"•";position:absolute;left:0;color:var(--neon)}
+.dp-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.dp-tag{font-size:11px;color:var(--text);border:1px solid var(--border);border-radius:999px;padding:4px 12px;background:var(--bg)}
+
+/* ============================================================
+   4. Portfolio — Toolbox tabs
+   ============================================================ */
+.portfolio-tabs{
+  display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:800px;margin:0 auto 46px;
+}
+.portfolio-tab{
+  background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);
+  padding:28px 24px;text-align:center;cursor:pointer;transition:all .4s var(--ease);
+  position:relative;overflow:hidden;
+}
+.portfolio-tab:hover{transform:translateY(-4px);border-color:var(--neon-soft);box-shadow:0 18px 40px -20px var(--neon-glow)}
+.portfolio-tab.active{border-color:var(--neon);background:rgba(47,111,237,.06);box-shadow:0 0 30px -12px var(--neon-glow)}
+.portfolio-tab .icon{font-size:34px;margin-bottom:12px;display:block}
+.portfolio-tab h3{font-size:19px;font-weight:600;margin-bottom:6px}
+.portfolio-tab p{font-size:12.5px;color:var(--text-dim);line-height:1.6}
+.portfolio-tab .en{font-size:11px;color:var(--text-faint);letter-spacing:2px;text-transform:uppercase;margin-top:6px}
+
+.portfolio-stage{position:relative;min-height:200px}
+.portfolio-content{display:none;animation:fadeIn .5s var(--ease)}
+.portfolio-content.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+.work-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.work-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:24px;transition:all .4s var(--ease);
+}
+.work-card:hover{transform:translateY(-4px);border-color:var(--neon-soft);box-shadow:0 16px 40px -20px var(--neon-glow)}
+.work-card .wk-tag{display:inline-block;font-size:10.5px;color:var(--neon);border:1px solid var(--neon-soft);border-radius:999px;padding:3px 10px;margin-bottom:12px}
+.work-card h4{font-size:16px;font-weight:600;margin-bottom:8px;line-height:1.4}
+.work-card p{font-size:13px;color:var(--text-dim);line-height:1.7}
+.work-card .wk-links{margin-top:14px;display:flex;flex-wrap:wrap;gap:10px}
+.work-card a{
+  font-size:12px;color:var(--neon);border:1px solid var(--neon-soft);border-radius:999px;
+  padding:6px 12px;transition:all .3s;
+}
+.work-card a:hover{background:rgba(47,111,237,.1);border-color:var(--neon)}
+
+.ai-dims{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:6px}
+.ai-dim{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px 20px;
+  transition:all .4s var(--ease);
+}
+.ai-dim:hover{transform:translateY(-4px);border-color:var(--neon-soft);box-shadow:0 16px 40px -20px var(--neon-glow)}
+.ai-dim .dim-icon{font-size:28px;margin-bottom:10px}
+.ai-dim h4{font-size:15px;font-weight:600;margin-bottom:6px}
+.ai-dim p{font-size:12px;color:var(--text-dim);line-height:1.65;margin-bottom:12px}
+.ai-dim ul{list-style:none;padding:0}
+.ai-dim li{font-size:12px;color:var(--text-dim);padding:6px 0;border-bottom:1px dashed var(--border)}
+.ai-dim li:last-child{border-bottom:none}
+
+/* ============================================================
+   5. Honors
+   ============================================================ */
+.bookshelf{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1100px;margin:0 auto;align-items:start;
+}
+@media(max-width:760px){
+  .bookshelf{grid-template-columns:1fr;max-width:520px}
+}
+.book{
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;
+  box-shadow:0 14px 30px -18px rgba(20,40,70,.25);position:relative;z-index:2;
+  border-left:7px solid var(--neon);
+}
+.book:nth-child(2){border-left-color:var(--teal)}
+.book:nth-child(3){border-left-color:var(--gold)}
+.book-head{
+  display:flex;align-items:center;gap:10px;padding:16px 18px;
+  background:linear-gradient(90deg,var(--bg-2),var(--surface));
+}
+.book-head .bk-icon{font-size:20px;flex-shrink:0}
+.book-head .bk-title{font-size:15px;font-weight:600;flex:1}
+.book-head .bk-count{font-size:11px;color:var(--text-dim);background:var(--bg);padding:3px 9px;border-radius:999px;flex-shrink:0}
+.book-page{
+  display:flex;align-items:center;gap:12px;padding:13px 18px;border-top:1px solid var(--border);
+  cursor:pointer;transition:background .25s;
+}
+.book-page:hover{background:rgba(47,111,237,.04)}
+.book-page .bp-seal{font-size:18px;flex-shrink:0;width:28px;text-align:center}
+.book-page .bp-info{flex:1;min-width:0}
+.book-page .bp-title{font-size:13px;font-weight:600;color:var(--text)}
+.book-page .bp-issuer{font-size:11px;color:var(--text-dim);margin-top:2px}
+.book-page .bp-link{
+  flex-shrink:0;font-size:11px;color:var(--neon);padding:5px 10px;border-radius:8px;
+  border:1px solid var(--neon-soft);transition:all .3s var(--ease);
+}
+.book-page .bp-link:hover{background:rgba(47,111,237,.1);border-color:var(--neon)}
+
+/* ============================================================
+   6. About Me — MBTI + Hobby collage
+   ============================================================ */
+.about-intro{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:18px;margin-bottom:46px;
+}
+.mbti-badge{
+  display:inline-flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);
+  border-radius:999px;padding:10px 22px;box-shadow:0 10px 26px -14px rgba(20,50,90,.2);
+}
+.mbti-badge .type{font-size:26px;font-weight:700;color:var(--neon);letter-spacing:1px}
+.mbti-badge .name{font-size:13px;color:var(--text-dim);line-height:1.35}
+.about-text{max-width:680px;margin:0 auto 50px;text-align:center;color:var(--text-dim);font-size:15px;line-height:1.8}
+.about-collage{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:18px;max-width:1080px;margin:0 auto;
+}
+.about-card{
+  position:relative;background:#fff;border-radius:14px;padding:12px 12px 14px;
+  box-shadow:0 14px 30px -16px rgba(20,40,70,.45);
+  transition:transform .45s var(--ease),box-shadow .45s var(--ease);will-change:transform;
+}
+.about-card:nth-child(3n+1){transform:rotate(-1.5deg)}
+.about-card:nth-child(3n+2){transform:rotate(1deg)}
+.about-card:nth-child(3n){transform:rotate(-.5deg)}
+.about-card:hover{transform:rotate(0) translateY(-6px) scale(1.03);box-shadow:0 24px 46px -18px rgba(20,40,70,.55);z-index:2}
+.about-card.wide{grid-column:span 2}
+.about-card.tall{grid-row:span 2}
+.about-card .tape{
+  position:absolute;top:-8px;left:50%;transform:translateX(-50%) rotate(-3deg);
+  width:58px;height:16px;background:linear-gradient(180deg,rgba(150,195,240,.85),rgba(120,170,230,.65));
+  border-radius:3px;box-shadow:0 2px 6px rgba(0,0,0,.12);
+}
+.about-img{
+  position:relative;width:100%;aspect-ratio:4/3;border-radius:10px;overflow:hidden;
+  background:linear-gradient(135deg,#eaf3fc,#d6e8fb);border:2px dashed #a9c6ea;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  color:#5b7fb0;text-align:center;padding:8px;
+}
+.about-card.tall .about-img{aspect-ratio:3/4}
+.about-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.about-img.has-img .ph{display:none}
+.about-img .ph-icon{font-size:30px}
+.about-img .ph-text{font-size:13px;font-weight:700}
+.about-img .ph-hint{font-size:10px}
+.about-cap{margin-top:10px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.about-cap .label{font-size:14px;font-weight:700;color:#1f2d3d}
+.about-cap .note{font-size:11px;color:#7a8aa0}
+
+/* ============================================================
+   7. Contact
+   ============================================================ */
+#contact{text-align:center;padding-bottom:90px}
+.contact-card{
+  max-width:720px;margin:0 auto;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:clamp(36px,6vw,60px) clamp(24px,5vw,50px);
+  box-shadow:0 24px 60px -30px rgba(20,50,90,.25);
+}
+.contact-card h2{font-size:clamp(28px,4.5vw,44px);font-weight:600;margin-bottom:8px}
+.contact-card h2 .cn{display:block;font-size:.45em;color:var(--text-faint);letter-spacing:3px;text-transform:uppercase;margin-top:8px}
+.contact-card .lead{color:var(--text-dim);font-size:15px;margin-bottom:32px;line-height:1.7}
+.contact-links{display:flex;justify-content:center;flex-wrap:wrap;gap:14px}
+.contact-links a{
+  display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--text);
+  border:1px solid var(--border);border-radius:999px;padding:12px 22px;
+  background:var(--surface-2);transition:all .3s var(--ease);
+}
+.contact-links a:hover{border-color:var(--neon);color:var(--neon);box-shadow:0 8px 22px -12px var(--neon-glow);transform:translateY(-2px)}
+footer.copy{text-align:center;padding:30px 20px;color:var(--text-faint);font-size:12px}
+
+/* ============================================================
+   Lightbox
+   ============================================================ */
+.lightbox{position:fixed;inset:0;z-index:100;background:rgba(5,5,8,.92);display:none;align-items:center;justify-content:center;padding:30px;backdrop-filter:blur(6px)}
+.lightbox.show{display:flex}
+.lb-inner{display:flex;flex-direction:column;align-items:center;gap:14px;max-width:94vw}
+.lightbox img{max-width:92vw;max-height:80vh;border-radius:12px;box-shadow:0 0 60px -10px var(--neon-glow)}
+.lb-cap{color:#fff;font-size:14px;text-align:center;padding:0 10px}
+.lightbox .close{position:absolute;top:24px;right:30px;font-size:30px;color:#fff;cursor:pointer;line-height:1}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media(max-width:980px){
+  .welcome-grid{grid-template-columns:1fr;text-align:center;gap:34px}
+  .welcome-photo{max-width:360px;margin:0 auto;max-height:52vh}
+  .welcome-sub{margin:0 auto 28px}
+  .edu-layout{grid-template-columns:1fr;text-align:center}
+  .edu-content h2 .cn{margin-bottom:20px}
+  .edu-path{right:10px;bottom:-10px}
+  .timeline-card{width:46%}
+  .work-grid{grid-template-columns:1fr}
+  .ai-dims{grid-template-columns:1fr}
+  .about-collage{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:720px){
+  .snap-section{height:auto;min-height:100vh;padding:90px 20px}
+  html{scroll-snap-type:none}
+  .timeline-line{left:18px}
+  .timeline-item,.timeline-item:nth-child(odd){flex-direction:column;align-items:flex-start;margin:30px 0}
+  .timeline-card{width:calc(100% - 50px);margin-left:46px}
+  .timeline-node{left:18px;transform:translateX(-50%)}
+  .timeline-item:hover .timeline-node{transform:translateX(-50%) scale(1.25)}
+  .timeline-connector{display:none}
+  .portfolio-tabs{grid-template-columns:1fr}
+  .about-collage{grid-template-columns:1fr}
+  .about-card.wide,.about-card.tall{grid-column:auto;grid-row:auto}
+}
+/* Typewriter effect */
+.typewriter{
+  display:inline;position:relative;
+}
+.typewriter-line{display:block;overflow:hidden;white-space:nowrap;width:0;border-right:2px solid var(--neon)}
+.typewriter-line.done{border-right:none}
+@keyframes caretPulse{
+  0%,100%{border-color:var(--neon)}50%{border-color:transparent}
+}
+.typewriter-line.typing{animation:caretPulse .9s step-end infinite}
+
+/* Plane flight animation */
+.edu-path-row{position:relative}
+.edu-path-row .plane{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  font-size:18px;z-index:3;
+  animation:flyPlane 3s var(--ease) infinite;
+}
+@keyframes flyPlane{
+  0%{left:12%;transform:translate(-50%,-50%) rotate(-15deg) scale(.8);opacity:0}
+  10%{opacity:1}
+  45%{transform:translate(-50%,-50%) rotate(0deg) scale(1)}
+  90%{left:88%;transform:translate(-50%,-50%) rotate(10deg) scale(1);opacity:1}
+  100%{left:95%;transform:translate(-50%,-50%) rotate(15deg) scale(.8);opacity:0}
+}
+.edu-path-row .dot{position:relative;z-index:2}
+
+/* About Me — compact scrapbook hobbies layout */
+.hobbies-grid{
+  display:flex;flex-direction:column;gap:clamp(18px,3vw,28px);max-width:1100px;margin:0 auto;
+}
+.hobby-block{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(14px,2.4vw,24px);align-items:stretch;
+}
+.hobby-block.reverse{direction:rtl}
+.hobby-block.reverse>*{direction:ltr}
+.right-stack{
+  display:flex;flex-direction:column;gap:clamp(16px,2.6vw,26px);align-self:start;
+}
+@media(max-width:760px){
+  .hobby-block{grid-template-columns:1fr}
+  .hobby-block.reverse{direction:ltr}
+}
+.hobby-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:clamp(16px,2.2vw,22px);box-shadow:0 14px 36px -20px rgba(20,50,90,.18);
+  transition:transform .4s var(--ease),box-shadow .4s var(--ease);
+  overflow:hidden;
+}
+.hobby-card:hover{transform:translateY(-4px);box-shadow:0 22px 50px -22px rgba(20,50,90,.28)}
+.hobby-card p{font-size:12.5px;color:var(--text-dim);line-height:1.7;margin-top:4px}
+.moment-card{display:flex;flex-direction:column}
+.hobby-card .hobby-head{
+  display:flex;align-items:center;gap:12px;margin-bottom:12px;
+}
+.hobby-card .hobby-icon{
+  width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--neon-soft),rgba(17,168,154,.12));
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+}
+.hobby-card h4{font-size:17px;font-weight:600}
+.hobby-card h4 span{display:block;font-size:11px;color:var(--text-faint);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
+.hobby-card p{font-size:13px;color:var(--text-dim);line-height:1.75}
+
+/* Travel maps (real GeoJSON via D3) */
+.map-duo{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media(max-width:720px){.map-duo{grid-template-columns:1fr}}
+.map-panel{background:linear-gradient(180deg,#f6fbff,#e9f2fb);border:1px solid var(--border);border-radius:14px;padding:12px;overflow:hidden}
+.map-cap{font-size:13px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.map-cap span{font-size:10px;color:var(--text-faint);letter-spacing:1.5px;text-transform:uppercase}
+.map-box{width:100%;border-radius:10px;overflow:hidden;background:#eef6ff;border:1px solid #d2e3f5}
+.map-box svg{width:100%;height:auto;display:block}
+.map-box .sphere{fill:#e6f0fb}
+.map-box .graticule{fill:none;stroke:#c4d8ee;stroke-width:.4}
+.map-box .country{fill:#8bb3d8;stroke:#5b8fc2;stroke-width:.65;transition:fill .25s ease}
+.map-box .country:hover{fill:#2f6fed}
+.map-box .province{fill:#8bb3d8;stroke:#5b8fc2;stroke-width:.65}
+.map-box .route{fill:none;stroke:#2f6fed;stroke-width:1.6;stroke-linecap:round;stroke-dasharray:5 5;animation:march 1s linear infinite}
+@keyframes march{to{stroke-dashoffset:-20}}
+.map-box .arrow-head{fill:#2f6fed}
+.map-box .home-dot{fill:#2f6fed}
+.map-box .home-ring{fill:none;stroke:#2f6fed;stroke-width:1.2;opacity:.6;transform-box:fill-box;transform-origin:center;animation:homePulse 2.4s ease-out infinite}
+@keyframes homePulse{0%{transform:scale(.6);opacity:.7}100%{transform:scale(2.4);opacity:0}}
+.map-box .dest-dot{fill:#d99417}
+.map-box .fly-dot{fill:#fff;stroke:#2f6fed;stroke-width:1}
+.map-box text{font-family:inherit}
+.map-box .dest-label{font-size:7px;fill:#27496e}
+.map-box .home-label{font-size:8px;fill:#2f6fed;font-weight:700}
+.travel-legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:10px;font-size:11px;color:var(--text-dim)}
+.travel-legend span{display:flex;align-items:center;gap:6px}
+.travel-legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.travel-legend .dot-home{background:#2f6fed}
+.travel-legend .dot-visited{background:#d99417}
+
+/* Compact world map inside half card */
+.map-compact{margin-top:12px}
+.map-compact .map-cap{font-size:12px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.map-compact .map-cap span{font-size:10px;color:var(--text-faint);letter-spacing:1.5px;text-transform:uppercase}
+
+/* Photo wall */
+.photo-wall{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px;
+}
+.photo-wall .photo-placeholder{
+  width:100%;aspect-ratio:1;border-radius:10px;
+  background:linear-gradient(135deg,#eaf3fc,#d6e8fb);border:2px dashed #a9c6ea;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  color:#5b7fb0;text-align:center;padding:8px;font-size:12px;
+}
+/* Scrapbook photo frames — playful tape style */
+.scrapbook-wall{display:flex;align-items:center;justify-content:center;gap:clamp(10px,2vw,18px);margin-top:14px;flex-wrap:wrap}
+.scrapbook-wall.one{flex-direction:column}
+.scrapbook-wall.two{flex-direction:row}
+.scrapbook-frame{
+  position:relative;background:#fff;padding:6px 6px 18px;border-radius:4px;
+  box-shadow:0 10px 22px -12px rgba(30,50,80,.45),0 2px 4px rgba(0,0,0,.06);
+  transition:transform .45s var(--ease),box-shadow .45s var(--ease);
+  max-width:min(46%,210px);
+}
+.scrapbook-wall.one .scrapbook-frame{max-width:none;width:100%}
+.scrapbook-frame.rotate-left{transform:rotate(-3.5deg)}
+.scrapbook-frame.rotate-right{transform:rotate(3.5deg)}
+.scrapbook-frame:hover{transform:rotate(0) scale(1.04);box-shadow:0 18px 34px -14px rgba(30,50,80,.55);z-index:2}
+.scrapbook-frame img{width:100%;max-height:560px;object-fit:contain;border-radius:2px;display:block;background:#fff}
+.scrapbook-frame .tape{
+  position:absolute;top:-10px;width:44px;height:16px;
+  background:rgba(255,255,255,.72);border:1px solid rgba(180,180,180,.42);
+  box-shadow:0 1px 3px rgba(0,0,0,.12);
+}
+.scrapbook-frame .tape-left{left:18%;transform:rotate(-14deg)}
+.scrapbook-frame .tape-right{right:18%;transform:rotate(12deg)}
+.scrapbook-frame .tape-center{left:50%;transform:translateX(-50%) rotate(-4deg)}
+@media(max-width:760px){
+  .scrapbook-wall.two{flex-direction:row}
+  .scrapbook-frame{max-width:min(46%,180px)}
+  .scrapbook-frame img{max-height:140px}
+  .scrapbook-wall.one .scrapbook-frame{max-width:none;width:100%}
+  .scrapbook-wall.one .scrapbook-frame img{max-height:440px}
+}
+
+/* Reading card (compact for half-width) */
+.reading-big{text-align:center;margin:12px 0 6px}
+.reading-big .num{font-size:42px;font-weight:800;color:var(--neon);line-height:1}
+.reading-big .label{font-size:11px;color:var(--text-dim);margin-top:4px;letter-spacing:.5px}
+.shelf-hint{text-align:center;font-size:11px;color:var(--text-dim);margin:4px 0 10px;letter-spacing:.3px}
+
+/* Mini bookshelf */
+.book-shelf{
+  position:relative;display:flex;align-items:flex-end;justify-content:flex-start;gap:4px;
+  flex-wrap:nowrap;overflow-x:auto;padding:14px 12px 22px;border-radius:12px;
+  background:linear-gradient(180deg,var(--bg-2),var(--surface));border:1px solid var(--border);
+}
+.book-shelf::after{
+  content:"";position:absolute;left:8px;right:8px;bottom:8px;height:8px;border-radius:3px;
+  background:linear-gradient(180deg,#caa46c,#a87f4d);box-shadow:0 5px 12px -5px rgba(80,50,20,.4);
+}
+.shelf-book{
+  position:relative;flex:0 0 auto;width:26px;border-radius:3px 3px 0 0;cursor:pointer;
+  display:flex;align-items:flex-start;justify-content:center;gap:1px;
+  box-shadow:inset -2px 0 5px -2px rgba(0,0,0,.25);
+  transition:transform .35s var(--ease),filter .35s var(--ease);
+}
+.shelf-book .spine-title{
+  writing-mode:vertical-rl;text-orientation:upright;font-size:8px;font-weight:700;color:#fff;
+  letter-spacing:.5px;margin-top:6px;user-select:none;white-space:nowrap;
+}
+.shelf-book .spine-author{
+  writing-mode:vertical-rl;text-orientation:upright;font-size:6px;color:rgba(255,255,255,.82);
+  letter-spacing:0;margin-top:6px;user-select:none;white-space:nowrap;
+}
+.shelf-book.fav{
+  width:34px;cursor:pointer;border:2px solid #fff;
+  box-shadow:0 0 0 2px var(--neon),0 0 14px rgba(47,111,237,.5);
+  animation:favPulse 2.4s ease-in-out infinite;
+}
+.shelf-book.fav .spine-title{font-size:9px}
+.shelf-book.fav::before{
+  content:"最近最爱";position:absolute;top:-18px;left:50%;transform:translateX(-50%);
+  font-size:8px;color:var(--neon);background:var(--surface);padding:2px 6px;border-radius:999px;
+  border:1px solid var(--neon-soft);white-space:nowrap;
+}
+.shelf-book.fav:hover{transform:translateY(-6px)}
+@keyframes favPulse{
+  0%,100%{box-shadow:0 0 0 2px var(--neon),0 0 14px rgba(47,111,237,.4)}
+  50%{box-shadow:0 0 0 2px var(--neon),0 0 26px rgba(47,111,237,.75)}
+}
+.flying-book{
+  position:fixed;z-index:9999;border-radius:5px;background:linear-gradient(135deg,var(--neon),#5b9aff);
+  color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;text-align:center;
+  box-shadow:0 18px 40px -12px rgba(20,40,70,.5);pointer-events:none;
+  transition:left .65s cubic-bezier(.5,-0.3,.3,1.2),top .65s cubic-bezier(.5,-0.3,.3,1.2),
+    width .65s ease,height .65s ease,opacity .4s ease .25s;
+}
+
+/* Book detail (flies down + expands, compact for half card) */
+.book-detail{
+  display:flex;gap:14px;align-items:flex-start;margin-top:16px;
+  background:linear-gradient(180deg,var(--bg-2),var(--surface));border:1px solid var(--border);
+  border-radius:14px;padding:18px;overflow:hidden;
+  opacity:0;transform:translateY(-40px) scale(.9);transform-origin:top center;
+  transition:opacity .5s ease .25s,transform .6s cubic-bezier(.2,.8,.2,1) .25s;
+  max-height:0;padding-top:0;padding-bottom:0;border-width:0;
+}
+.book-detail.open{
+  opacity:1;transform:none;max-height:520px;padding-top:18px;padding-bottom:18px;border-width:1px;
+}
+.book-detail .bd-cover{
+  width:64px;height:104px;border-radius:5px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--neon),#5b9aff);color:#fff;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  writing-mode:vertical-rl;text-orientation:upright;font-size:15px;font-weight:800;letter-spacing:2px;
+  box-shadow:0 10px 22px -12px rgba(20,40,70,.5);padding:8px 4px;line-height:1.15;
+}
+.book-detail .bd-body{flex:1;min-width:0}
+.book-detail .bd-title{font-size:16px;font-weight:700}
+.book-detail .bd-sub{font-size:10px;color:var(--neon);margin-top:2px;letter-spacing:.5px}
+.book-detail .bd-intro{font-size:12px;color:var(--text-dim);line-height:1.7;margin-top:8px}
+.book-detail .bd-quote{
+  margin-top:10px;padding:10px 12px;border-left:3px solid var(--neon);
+  background:rgba(47,111,237,.05);border-radius:0 8px 8px 0;
+  font-size:11.5px;color:var(--text);line-height:1.75;white-space:pre-line;
+}
+@media(max-width:760px){
+  .book-detail{gap:12px;padding:16px}
+  .book-detail.open{padding-top:16px;padding-bottom:16px;max-height:560px}
+  .book-detail .bd-cover{width:58px;height:92px;font-size:13px}
+}
+@media(max-width:560px){
+  .book-detail{flex-direction:column;align-items:center;text-align:center}
+  .book-detail .bd-quote{text-align:left}
+}
+
+/* Sports — favorite sports with playful cartoon chips */
+.sport-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:14px;
+}
+.sport-chip{
+  position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;
+  padding:16px 10px;border-radius:16px;
+  background:linear-gradient(180deg,var(--bg-2),var(--surface));border:1px solid var(--border);
+  transition:transform .3s var(--ease),box-shadow .3s var(--ease);
+}
+.sport-chip:hover{transform:translateY(-4px);box-shadow:0 14px 30px -16px rgba(20,50,90,.35)}
+.sport-chip .emoji{font-size:38px;line-height:1;display:inline-block}
+.sport-chip .s-name{font-size:14px;font-weight:600;color:var(--text)}
+.sport-chip .s-tag{font-size:10px;color:var(--text-faint)}
+.sport-chip .s-badge{
+  position:absolute;top:-9px;right:-7px;font-size:9px;font-weight:700;color:#fff;
+  background:linear-gradient(135deg,var(--neon),#5b9aff);padding:3px 8px;border-radius:999px;
+  box-shadow:0 4px 10px -4px rgba(47,111,237,.6);letter-spacing:.3px;
+}
+@keyframes bounceY{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+.sport-chip .emoji.bounce{animation:bounceY 1.6s ease-in-out infinite}
+@keyframes swayX{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+.sport-chip .emoji.sway{animation:swayX 2s ease-in-out infinite}
+@keyframes slideInRight{
+  from{opacity:0;transform:translateX(70px) scale(.96)}
+  to{opacity:1;transform:translateX(0) scale(1)}
+}
+.sport-chip.slide-right.in{animation:slideInRight .8s cubic-bezier(.2,.8,.2,1) both}
+@media(max-width:760px){
+  .sport-grid{grid-template-columns:repeat(2,1fr)}
+}
+
+/* Music card */
+.music-card{display:flex;flex-direction:row;align-items:center;gap:20px;flex-wrap:wrap}
+.music-card .hobby-head{margin-bottom:0}
+.music-card p{max-width:520px;margin:0}
+
+/* Ping-pong animation */
+.pingpong-stage{
+  position:relative;height:150px;display:flex;align-items:center;justify-content:center;margin-top:10px;
+}
+.pingpong-table{
+  width:160px;height:6px;background:linear-gradient(90deg,var(--neon),var(--teal));border-radius:3px;position:relative;
+}
+.pingpong-net{
+  position:absolute;left:50%;top:-14px;transform:translateX(-50%);width:2px;height:24px;background:var(--text-faint);
+}
+.pingpong-ball{
+  position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid var(--gold);left:10%;top:-40px;
+  animation:ppBounce 2s ease-in-out infinite;
+}
+.pingpong-paddle-left,.pingpong-paddle-right{
+  position:absolute;width:34px;height:8px;border-radius:4px;background:var(--rose);top:-18px;
+}
+.pingpong-paddle-left{left:5%;animation:ppLeft 2s ease-in-out infinite}
+.pingpong-paddle-right{right:5%;animation:ppRight 2s ease-in-out infinite}
+@keyframes ppBounce{
+  0%,100%{left:10%;top:-38px;transform:scale(1)}
+  25%{top:-70px;transform:scale(.95)}
+  50%{left:86%;top:-38px;transform:scale(1)}
+  75%{top:-70px;transform:scale(.95)}
+}
+@keyframes ppLeft{
+  0%,100%{transform:rotate(-10deg) translateY(0)}
+  25%{transform:rotate(5deg) translateY(-6px)}
+  50%{transform:rotate(-10deg) translateY(0)}
+}
+@keyframes ppRight{
+  0%,100%{transform:rotate(10deg) translateY(0)}
+  50%{transform:rotate(-5deg) translateY(-6px)}
+  75%{transform:rotate(10deg) translateY(0)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .reveal{opacity:1;transform:none}
+  .typewriter-line{width:auto;border-right:none}
+}
+</style>
+<script src="assets/js/d3.min.js"></script>
+<script src="assets/js/topojson-client.min.js"></script>
+<script src="assets/maps/world-110m.js"></script>
+<script src="assets/maps/china_main.js"></script>
+</head>
+<body>
+
+<div class="bg-orb orb-a"></div>
+<div class="bg-orb orb-b"></div>
+
+<!-- Navigation -->
+<nav>
+  <div class="brand">黄钰茜<span>.</span></div>
+  <button class="menu-btn" id="menuBtn" aria-label="打开导航" aria-expanded="false"><span></span></button>
+</nav>
+
+<!-- Full-screen menu -->
+<div class="menu-overlay" id="menuOverlay">
+  <div class="bg-orb orb-a" style="top:10%;right:10%;opacity:.25"></div>
+  <ul class="menu-list">
+    <li><a href="#internship" data-menu><span class="menu-en">Internship</span><span class="menu-cn">实习经历</span></a></li>
+    <li><a href="#portfolio" data-menu><span class="menu-en">Portfolio</span><span class="menu-cn">作品集</span></a></li>
+    <li><a href="#honors" data-menu><span class="menu-en">Honors</span><span class="menu-cn">荣誉证书</span></a></li>
+    <li><a href="#about" data-menu><span class="menu-en">About me</span><span class="menu-cn">关于我</span></a></li>
+    <li><a href="#contact" data-menu><span class="menu-en">Contact me</span><span class="menu-cn">联系我</span></a></li>
+  </ul>
+</div>
+
+<main>
+
+<!-- ============================================================
+     1. Welcome / Hero
+     ============================================================ -->
+<section id="welcome" class="snap-section">
+  <div class="welcome-grid">
+    <div class="welcome-left reveal">
+      <div class="welcome-kicker">Portfolio · 2026</div>
+      <h1 class="welcome-title">
+        <span class="line">Hi, welcome to.</span>
+        <span class="line cn-part">你好，欢迎来到黄钰茜的世界</span>
+      </h1>
+      <p class="welcome-sub">
+        <span class="typewriter">
+          <span class="typewriter-line" data-text="既能写上报财政部的研究报告，也能剪出 4.9 万阅读的爆款内容。">既能写上报财政部的研究报告，也能剪出 4.9 万阅读的爆款内容。</span>
+          <span class="typewriter-line" data-text="把研究做进决策层，把故事讲进千万次播放。">把研究做进决策层，把故事讲进千万次播放。</span>
+        </span>
+      </p>
+      <div class="welcome-scroll">
+        <span>向下滚动探索</span><span class="arrow"></span>
+      </div>
+    </div>
+    <div class="welcome-photo reveal">
+      <img src="assets/photos/hero.jpg" alt="黄钰茜" loading="eager" />
+      <div class="welcome-photo-info">
+        <div class="loc">📍 Sanya, China</div>
+        <div class="caption">à La prochaine — 期待与你相遇</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     2. Education
+     ============================================================ -->
+<section id="education" class="snap-section">
+  <div class="edu-layout">
+    <div class="edu-visual reveal">
+      <div class="edu-photo">
+        <img src="assets/photos/education.jpg" alt="黄钰茜 · 教育经历" />
+      </div>
+      <div class="edu-path">
+        <div class="edu-path-title">Academic Path</div>
+        <div class="edu-path-row"><span>Beijing</span><span class="dot"></span><span class="plane">✈</span><span class="dot"></span><span>Nanjing</span></div>
+      </div>
+    </div>
+    <div class="edu-content reveal">
+      <h2>
+        教育经历
+        <span class="cn">Education</span>
+      </h2>
+      <p class="lead">
+        从北京师范大学到南京大学–约翰斯·霍普金斯大学 SAIS 中美文化研究中心，
+        在人文社科、国际传播与政策研究的交叉地带持续深耕。
+      </p>
+      <div class="edu-cards">
+        <div class="edu-card">
+          <div class="school">南京大学 – 约翰斯·霍普金斯大学 SAIS</div>
+          <div class="prog">中美文化研究中心 · 国际关系硕士（全英授课）</div>
+          <div class="detail">聚焦国际关系、公共传播与跨文化研究，参与中心对外传播与品牌运营。</div>
+          <div class="tags">
+            <span class="tag">经济学原理</span>
+            <span class="tag">中美比较经济</span>
+            <span class="tag">人工智能通识与应用</span>
+            <span class="tag">能源资源与环境经济学</span>
+            <span class="tag">能源技术与政策</span>
+          </div>
+        </div>
+        <div class="edu-card">
+          <div class="school">北京师范大学</div>
+          <div class="prog">汉语言文学本科（GPA 3.8/4，排名 13/251）</div>
+          <div class="detail">在校期间获一等奖学金、三好学生、优秀学生干部等荣誉，担任白鸽青年志愿者协会宣传讲解中心主任。曾参加牛津大学全球展望计划（OPGDI）。</div>
+          <div class="tags">
+            <span class="tag">语言学概论</span>
+            <span class="tag">经济全球化与当代中国经济</span>
+            <span class="tag">比较视野中的中国政策过程</span>
+            <span class="tag">现代公共关系实务</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     3. Internship — Timeline
+     ============================================================ -->
+<section id="internship">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-eyebrow">Internship</span>
+      <h2 class="sec-title">
+        实习经历
+        <span class="cn">Professional Experience</span>
+      </h2>
+      <p class="sec-lead">点击下方时间线节点，查看每一段经历的详细故事与核心产出。</p>
+    </div>
+    <div class="timeline-wrap reveal" id="timelineWrap">
+      <div class="timeline-line"></div>
+      <!-- JS will populate timeline items -->
+    </div>
+
+    <div class="soft-skills reveal">
+      <h3 class="soft-title">软技能 <span>Soft Skills</span></h3>
+      <div class="soft-grid">
+        <div class="soft-card">
+          <div class="soft-icon">🧭</div>
+          <h4>领导力 Leadership</h4>
+          <p>白鸽青年志愿者协会宣传讲解中心主任，统筹策划并落地公益月等大型学生活动，搭建与北京市多家博物馆的合作关系。</p>
+          <p class="soft-ev">北京市大学生科研创新计划 · 团队队长，带领团队获批市级课题并受邀参加第 81 届世界科幻大会。</p>
+        </div>
+        <div class="soft-card">
+          <div class="soft-icon">🎤</div>
+          <h4>演讲表达 Public Speaking</h4>
+          <p>第 16 届 Model APEC 参赛代表，牵头撰写《APEC 生态旅游走廊建设提案》，获评「最佳政策提案」，个人获「杰出代表」称号。</p>
+          <p class="soft-ev">擅长在跨校论坛、驻华大使来访等重大活动中完成新闻稿撰写与现场宣讲。</p>
+        </div>
+        <div class="soft-card">
+          <div class="soft-icon">🤝</div>
+          <h4>沟通协调 Coordination</h4>
+          <p>在中美文化研究中心担任公共关系部学生助理，负责跨校百人论坛、校企合作等活动的协调与传播。</p>
+          <p class="soft-ev">曾带队一个比自己年长许多的成人班级（高中教师群体），以清晰的沟通与节奏把控促成项目顺利完成。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     4. Portfolio — Toolbox
+     ============================================================ -->
+<section id="portfolio">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-eyebrow">Portfolio</span>
+      <h2 class="sec-title">
+        作品集
+        <span class="cn">Selected Works</span>
+      </h2>
+      <p class="sec-lead">内容创作与 AI 能力，是我工作的两翼。选择一个工具箱，看看里面的作品。</p>
+    </div>
+    <div class="portfolio-tabs reveal">
+      <div class="portfolio-tab active" data-tab="ai">
+        <span class="icon">🤖</span>
+        <h3>AI 能力类</h3>
+        <p>AI 产业分析、智能工作流与数据看板</p>
+        <div class="en">AI Capability</div>
+      </div>
+      <div class="portfolio-tab" data-tab="content">
+        <span class="icon">✍️</span>
+        <h3>内容创作类</h3>
+        <p>文章、报道、公众号稿件与学术论文</p>
+        <div class="en">Content Creation</div>
+      </div>
+    </div>
+    <div class="portfolio-stage reveal">
+      <div class="portfolio-content active" id="tab-ai"><!-- JS --></div>
+      <div class="portfolio-content" id="tab-content"><!-- JS --></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     5. Honors — Bookshelf
+     ============================================================ -->
+<section id="honors">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-eyebrow">Honors</span>
+      <h2 class="sec-title">
+        荣誉证书
+        <span class="cn">Honors & Certificates</span>
+      </h2>
+      <p class="sec-lead">这里陈列着我获得过的一些认可，点击任意证书即可查看 PDF 详情。</p>
+    </div>
+    <div class="bookshelf reveal" id="bookshelf"><!-- JS --></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     6. About Me
+     ============================================================ -->
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-eyebrow">About me</span>
+      <h2 class="sec-title">
+        关于我
+        <span class="cn">Beyond Work</span>
+      </h2>
+    </div>
+    <div class="about-intro reveal">
+      <div class="mbti-badge">
+        <span class="type">ESFJ</span>
+        <span class="name">执政官人格<br><span style="color:var(--text-faint);font-size:11px">The Consul</span></span>
+      </div>
+    </div>
+    <p class="about-text reveal">
+      工作之外，我用旅行丈量世界，用摄影收藏光影，用阅读沉淀思考。ESFJ 的我相信人与人之间的连接，也享受把想法变成作品的过程。
+    </p>
+
+    <div class="hobbies-grid reveal" id="hobbiesGrid">
+      <!-- Row 1: Travel + Photography -->
+      <div class="hobby-block">
+        <!-- Travel -->
+        <div class="hobby-card">
+          <div class="hobby-head"><div class="hobby-icon">✈️</div><h4>旅行 <span>Travel · 从兰州出发</span></h4></div>
+          <p>从黄河岸边的家乡兰州出发，已到访美国、日本、韩国，以及中国台湾、中国香港、中国澳门与国内众多城市。</p>
+          <div class="map-compact">
+            <div class="map-cap">🌍 世界地图 <span>World</span></div>
+            <div class="map-box" id="worldBox"><svg id="worldSvg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet"></svg></div>
+          </div>
+          <div class="travel-legend">
+            <span><i class="dot-home"></i>兰州（出发地）</span>
+            <span><i class="dot-visited"></i>已到访</span>
+          </div>
+        </div>
+
+        <!-- Photography -->
+        <div class="hobby-card">
+          <div class="hobby-head"><div class="hobby-icon">📷</div><h4>摄影 <span>Photography</span></h4></div>
+          <p>用镜头收藏光影，把瞬间变成永恒。</p>
+          <div class="scrapbook-wall two">
+            <div class="scrapbook-frame rotate-left">
+              <span class="tape tape-left"></span>
+              <img src="assets/photos/photo1.jpg" alt="摄影作品 1" loading="lazy" />
+            </div>
+            <div class="scrapbook-frame rotate-right">
+              <span class="tape tape-right"></span>
+              <img src="assets/photos/photo2.jpg" alt="摄影作品 2" loading="lazy" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 2: Reading (left) + right stack (Favorite Moment + Sports) -->
+      <div class="hobby-block">
+        <!-- Reading -->
+        <div class="hobby-card" id="readingBlock">
+          <div class="hobby-head"><div class="hobby-icon">📖</div><h4>阅读 <span>Reading</span></h4></div>
+          <p>在书里看更大的世界，也把灵感带回工作与生活。轻触任意书脊，它都会飞下来和你聊聊。</p>
+          <div class="reading-big">
+            <div class="num" id="readCount">0</div>
+            <div class="label">累计阅读书本</div>
+          </div>
+          <div class="shelf-hint" id="shelfHint">书架上的《智能简史》会自己飞下来 ↓ 轻触任意书可重看</div>
+          <div class="book-shelf" id="bookShelf"><!-- JS --></div>
+          <div class="book-detail" id="bookDetail">
+            <div class="bd-cover" id="bdCover"></div>
+            <div class="bd-body">
+              <div class="bd-title" id="bdTitle"></div>
+              <div class="bd-sub" id="bdSub"></div>
+              <p class="bd-intro" id="bdIntro"></p>
+              <blockquote class="bd-quote" id="bdQuote" style="display:none"></blockquote>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right stack -->
+        <div class="right-stack">
+          <!-- Favorite Moment -->
+          <div class="hobby-card moment-card">
+            <div class="hobby-head"><div class="hobby-icon">💫</div><h4>过去一年最喜欢的时刻 <span>Favorite Moment</span></h4></div>
+            <p>和来自世界各地的朋友、同学一起，在南京的玄武湖边野餐。</p>
+            <div class="scrapbook-wall one">
+              <div class="scrapbook-frame">
+                <span class="tape tape-center"></span>
+                <img src="assets/photos/moment.jpg" alt="南京玄武湖野餐" loading="lazy" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Favorite Sports -->
+          <div class="hobby-card sport-card">
+            <div class="hobby-head"><div class="hobby-icon">🏸</div><h4>最喜欢的运动 <span>Favorite Sports</span></h4></div>
+            <p>球台、球场、雪道，再到最近重新拾起的拉丁舞——运动是我保持状态的秘密。</p>
+            <div class="sport-grid">
+              <div class="sport-chip">
+                <span class="emoji bounce">🏓</span>
+                <span class="s-name">乒乓球</span>
+                <span class="s-tag">桌上的速度游戏</span>
+              </div>
+              <div class="sport-chip">
+                <span class="emoji bounce">🏐</span>
+                <span class="s-name">排球</span>
+                <span class="s-tag">团队的心跳</span>
+              </div>
+              <div class="sport-chip">
+                <span class="emoji sway">🎿</span>
+                <span class="s-name">滑雪</span>
+                <span class="s-tag">雪道上的自由</span>
+              </div>
+              <div class="sport-chip slide-right">
+                <span class="s-badge">最近重启 💡</span>
+                <span class="emoji sway">💃</span>
+                <span class="s-name">拉丁舞</span>
+                <span class="s-tag">捡起初中的热爱</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     7. Contact
+     ============================================================ -->
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-card reveal">
+      <h2>
+        联系我
+        <span class="cn">Contact me</span>
+      </h2>
+      <p class="lead">
+        如果你对我的经历感兴趣，或者有合作、交流的想法，欢迎通过邮件或简历找到我。
+      </p>
+      <div class="contact-links">
+        <a href="mailto:huangyuqianamy@163.com">📧 huangyuqianamy@163.com</a>
+        <a href="tel:13893283875">📱 138 9328 3875</a>
+        <a href="assets/黄钰茜的简历.pdf" download>📄 下载简历 PDF</a>
+        <a href="#welcome">⬆ 回到顶部</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="copy">
+  <div>© 2026 黄钰茜 · 个人作品集 | Huang Yuxi Portfolio</div>
+</footer>
+
+<!-- Internship detail panel -->
+<div class="detail-panel-backdrop" id="dpBackdrop"></div>
+<aside class="detail-panel" id="detailPanel" aria-hidden="true">
+  <div class="dp-header">
+    <div>
+      <div class="dp-kicker" id="dpKicker">Internship</div>
+      <div class="dp-title" id="dpTitle"></div>
+      <div class="dp-org" id="dpOrg"></div>
+    </div>
+    <button class="dp-close" id="dpClose" aria-label="关闭">×</button>
+  </div>
+  <div class="dp-body" id="dpBody"></div>
+</aside>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox"><span class="close" id="lbClose">×</span><div class="lb-inner"><img id="lbImg" src="" alt=""><div class="lb-cap" id="lbCap"></div></div></div>
+
+<script>
+/* ============================================================
+   1) Menu toggle
+   ============================================================ */
+var menuBtn=document.getElementById('menuBtn'),menuOverlay=document.getElementById('menuOverlay');
+function toggleMenu(){
+  var open=menuBtn.classList.toggle('open');
+  menuOverlay.classList.toggle('open',open);
+  menuBtn.setAttribute('aria-expanded',open?'true':'false');
+  document.body.style.overflow=open?'hidden':'';
+}
+menuBtn.addEventListener('click',toggleMenu);
+document.querySelectorAll('[data-menu]').forEach(function(a){
+  a.addEventListener('click',function(){toggleMenu();});
+});
+
+/* ============================================================
+   2) Reveal animation
+   ============================================================ */
+var io=new IntersectionObserver(function(es){
+  es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(function(n){io.observe(n);});
+
+/* ============================================================
+   3) Internship timeline data & render
+   ============================================================ */
+var INTERNSHIPS=[
+  {
+    date:'2026.06 – 2026.09',company:'腾讯',role:'商业分析（AI 方向）',
+    preview:'搭建 AI 驱动的行业分析工作流，开发 HTML 动态数据看板，支撑金融科技、银行及文化传媒等多赛道研究。',
+    tags:['AI 产业分析','数据看板','行业研究'],
+    sections:[
+      {title:'核心工作',items:[
+        '沉淀并掌握行业分析、网页开发、取数、政策分析四大核心 Skill，封装为可复用的 AI 能力单元。',
+        '基于大模型深度交互，完成多赛道行业扫描与关键洞察提炼。',
+        '开发 HTML 动态数据看板，实现核心指标实时可视化与周期性自动更新，直接支撑季度行业汇报。',
+        '熟悉项目底层技术支撑：网关配置、密钥凭据管理（KMS）及业务数据建模，保障数据链路安全与稳定。'
+      ]},
+      {title:'项目成果',items:[
+        '跑通金融科技、银行及文化传媒等多个赛道的全流程分析链路。',
+        '搭建标准化行业分析看板，显著提升研究效率 30%。',
+        '降低人工整理成本 50%，实现核心指标自动刷新。'
+      ]}
+    ]
+  },
+  {
+    date:'2026.02 – 2026.04',company:'中石油经济技术研究院',role:'海外投资环境研究所',
+    preview:'参与撰写上报财政部的中国海外油气投资决策支持报告，持续跟踪中东局势并撰写伊朗局势日报/周报。',
+    tags:['政策研究','能源安全','数据分析'],
+    sections:[
+      {title:'核心工作',items:[
+        '基于 Excel、SQL 完成全球油气市场多维度数据归集与清洗。',
+        '系统分析东道国政策环境、合同架构及投资风险，参与撰写上报财政部的决策支持报告。',
+        '持续 50 余天监测中东局势，跟踪伊朗地缘动态、制裁演进与区域安全环境，撰写伊朗局势日报与周报。',
+        '搭建半自动化油气市场监测体系，用 VLOOKUP 与数据透视表将周报整理时间从 2–3 小时压缩至 40 分钟以内。'
+      ]},
+      {title:'代表项目',items:[
+        '《国际原油运价波动及对我国能源安全影响》：拆解 VLCC 运力供给、运输需求、地缘溢价，提出“国油国运”与自主运力补短板建议。',
+        '《国际石油公司重返伊拉克形势分析及中资能源企业应对策略》：从合同模式、PEST、竞争格局等维度提出中资企业抱团协同、本地化运营策略。'
+      ]}
+    ]
+  },
+  {
+    date:'2025.12 – 2026.01',company:'Intralink 倬英咨询（上海）',role:'项目经理助理实习生',
+    preview:'对接 20+ 海外新能源与电池领域客户，运用 Excel、SQL 处理 1000+ 条行业数据，推进 4 个合作项目签约。',
+    tags:['商务拓展','行业研究','客户对接'],
+    sections:[
+      {title:'核心工作',items:[
+        '对接 20+ 位新能源技术、电池与车企领域海外客户，负责全流程需求沟通、关系维护与洽谈协调。',
+        '运用 Excel、SQL 处理 1000+ 条 InterBattery、CES 展会企业数据，完成数据清洗与多维度交叉分析。',
+        '输出汽车与新能源领域市场供需及竞品动态洞察，支撑 3 份行业调研报告撰写与迭代。'
+      ]},
+      {title:'代表案例',items:[
+        'Anaphite（英国电池技术公司）：完成中国 BEV 市场 mapping、竞品对标，并帮助客户设计「为什么中国电池厂需要关注干法技术」的市场叙事，最终成功签约。'
+      ]}
+    ]
+  },
+  {
+    date:'2025.06 – 2025.09',company:'国家电网能源研究院',role:'管理咨询研究所实习生',
+    preview:'支撑国务院国资委、国家电网等十余项课题研究，沉淀管理咨询常用建模方法与分析框架工具包。',
+    tags:['管理咨询','政策课题','研究方法'],
+    sections:[
+      {title:'核心工作',items:[
+        '支撑国务院国资委、国家电网等十余项课题的基础研究，聚焦新型电力系统与战略性新兴产业。',
+        '综合运用文献研究、案例拆解、数据交叉验证等方法开展专项研究。',
+        '独立完成 5+ 篇中英文文献综述，协助撰写项目申报书与战略研究报告。',
+        '梳理管理咨询领域常用建模方法与分析框架，形成可复用的分析工具包及方法论文档。'
+      ]},
+      {title:'方法论沉淀',items:[
+        '盘点 20+ 种常用分析方法（SWOT、PEST、波特五力、利益相关者矩阵、层次分析法等）。',
+        '标注每种方法的适用场景、操作步骤与输入输出要求，用作团队内部培训材料。'
+      ]}
+    ]
+  },
+  {
+    date:'2024.11 – 2025.02',company:'保尔森基金会',role:'“保尔森可持续发展奖”组委会实习生',
+    preview:'协助筹办 2024 年颁奖典礼，开展 ESG 行业深度调研与 COP29 气候议题追踪，中英双语办公。',
+    tags:['ESG','活动统筹','行业研究'],
+    sections:[
+      {title:'核心工作',items:[
+        '协助完成 2024 年颁奖典礼全流程筹备，联动政府事务部与宣传部拟定典礼日程。',
+        '直接对接获奖团队开展沟通协调，撰写专家评审发言要点。',
+        '中英双语办公，开展 ESG 行业趋势深度研究，追踪 COP29 气候议题与头部企业可持续创新实践。',
+        '定期输出行业洞察简报，支撑机构研究决策。'
+      ]},
+      {title:'突发应对案例',items:[
+        '典礼前一周获奖企业临时更换领奖代表为全球 CEO，24 小时内完成发言要点、座次、媒体资料包更新，保障典礼顺利落地。'
+      ]}
+    ]
+  },
+  {
+    date:'2024.03 – 2025.12',company:'北京师范大学发展与合作中心',role:'项目管理实习生',
+    preview:'通过问卷与深度访谈覆盖“卓越教师”社群，设计 3 套定制化课程体系，培训满意度提升 28%。',
+    tags:['用户研究','课程设计','效果评估'],
+    sections:[
+      {title:'核心工作',items:[
+        '通过问卷与深度访谈覆盖“卓越教师”社群，回收 200+ 条有效需求数据并精准提炼职业发展痛点。',
+        '协助策划 3 套定制化课程体系与学员评价体系（课堂实战营、教研工作坊、引领者计划）。',
+        '统筹课程落地执行与全周期效果追踪，运用 Excel 统计学员反馈数据并持续迭代。'
+      ]},
+      {title:'项目成果',items:[
+        '课程体系迭代优化后，学员培训满意度提升 28%、课程考核通过率提升 22%。',
+        '项目获评优秀培训项目。'
+      ]}
+    ]
+  },
+  {
+    date:'2023.10 – 2023.12',company:'高等教育出版社',role:'责任编辑实习生',
+    preview:'协助职业本科新形态一体化教材建设，策划《高职美育教程》宣传文案与推广活动。',
+    tags:['教材编校','营销策划','内容运营'],
+    sections:[
+      {title:'核心工作',items:[
+        '协助职业本科新形态一体化教材建设，校对《大学生心理健康教育》等国家规划教材。',
+        '策划撰写《高职美育教程》宣传文案与推广活动，通过“用内容带教材”的思路提升市场曝光。',
+        '在高职院校教师社群发起美育话题讨论，并邀请使用教师分享真实案例。'
+      ]},
+      {title:'项目成果',items:[
+        '教材咨询量与试用申请量明显提升，吸引来的用户对教材认可度更高。'
+      ]}
+    ]
+  },
+  {
+    date:'2023.06 – 2023.07',company:'英大传媒投资集团',role:'融媒体中心实习生',
+    preview:'聚焦电力赋能主题，独立完成 3 篇深度原创文章，原创内容累计浏览量 4.9 万+，位列同题材 TOP3。',
+    tags:['内容创作','媒体运营','选题策划'],
+    sections:[
+      {title:'核心工作',items:[
+        '日均筛选 100+ 资讯，捕捉核心政策导向与行业见闻，提供 20+ 选题。',
+        '聚焦电力赋能，独立完成 3 篇深度原创文章，协助策划拍摄 2 条视频。',
+        '熟悉社交媒体内容运营逻辑，将政策议题落到人物故事。'
+      ]},
+      {title:'代表稿件',items:[
+        '《电力赋能乡村振兴》：以四川郫县豆瓣酱产业为切入点，呈现农网改造前后生产用电的稳定性变化与乡村产业新生，浏览量近 2 万，同题材推送前三。'
+      ]}
+    ]
+  }
+];
+
+var timelineWrap=document.getElementById('timelineWrap');
+timelineWrap.innerHTML='<div class="timeline-line"></div>'+INTERNSHIPS.map(function(it,i){
+  return '<div class="timeline-item reveal" data-idx="'+i+'">'+
+    '<div class="timeline-connector"></div>'+
+    '<div class="timeline-node"></div>'+
+    '<div class="timeline-card">'+
+      '<div class="date">'+it.date+'</div>'+
+      '<div class="company">'+it.company+'</div>'+
+      '<div class="role">'+it.role+'</div>'+
+      '<div class="preview">'+it.preview+'</div>'+
+    '</div>'+
+  '</div>';
+}).join('');
+timelineWrap.querySelectorAll('.reveal').forEach(function(n){io.observe(n);});
+
+/* Detail panel logic */
+var dpBackdrop=document.getElementById('dpBackdrop'),dpPanel=document.getElementById('detailPanel');
+var dpTitle=document.getElementById('dpTitle'),dpOrg=document.getElementById('dpOrg'),dpBody=document.getElementById('dpBody');
+function openDetail(idx){
+  var d=INTERNSHIPS[idx];if(!d)return;
+  dpTitle.textContent=d.company;
+  dpOrg.textContent=d.date+' · '+d.role;
+  var tagsHtml='<div class="dp-tags">'+d.tags.map(function(t){return '<span class="dp-tag">'+t+'</span>';}).join('')+'</div>';
+  var sectionsHtml=d.sections.map(function(s){
+    return '<div class="dp-section"><h4>'+s.title+'</h4><ul>'+
+      s.items.map(function(item){return '<li>'+item+'</li>';}).join('')+
+    '</ul></div>';
+  }).join('');
+  dpBody.innerHTML=tagsHtml+sectionsHtml;
+  dpPanel.classList.add('open');
+  dpBackdrop.classList.add('open');
+  dpPanel.setAttribute('aria-hidden','false');
+  document.body.style.overflow='hidden';
+}
+function closeDetail(){
+  dpPanel.classList.remove('open');
+  dpBackdrop.classList.remove('open');
+  dpPanel.setAttribute('aria-hidden','true');
+  document.body.style.overflow='';
+}
+document.getElementById('dpClose').addEventListener('click',closeDetail);
+dpBackdrop.addEventListener('click',closeDetail);
+timelineWrap.querySelectorAll('.timeline-card, .timeline-node').forEach(function(el){
+  el.addEventListener('click',function(){
+    var item=el.closest('.timeline-item');
+    openDetail(parseInt(item.dataset.idx,10));
+  });
+});
+
+/* ============================================================
+   4) Portfolio tabs
+   ============================================================ */
+var CONTENT_WORKS=[
+  {tag:'深度报道',title:'电力赋能乡村振兴',desc:'以四川郫县豆瓣酱产业为切入点，呈现农网改造前后生产用电的稳定性变化，以及由此焕新的乡村产业。'},
+  {tag:'公众号运营',title:'中美中心品牌传播稿件',desc:'负责中心中英文官网、微信公众号、视频号、B站等内容更新，主导策划、拍摄、剪辑视频与公众号文章。（具体作品链接待补充）'},
+  {tag:'教材营销',title:'《高职美育教程》宣传策划',desc:'围绕美育主题制造内容吸引目标用户，提升教材咨询量与试用申请量。'},
+  {tag:'学术论文',title:'科幻文学海外传播机制研究',desc:'5 万字课题报告，结合文献计量、300+ 海外读者问卷与 15 位国际专家访谈，获论文比赛二等奖并受邀参加世界科幻大会。'},
+  {tag:'政策提案',title:'APEC 生态旅游走廊建设提案',desc:'构建生态保护、气候行动、可持续融资机制与区域发展相结合的政策工具，获 Model APEC 最佳政策提案。'},
+  {tag:'翻译写作',title:'第 40 届秦淮灯会讲解词',desc:'翻译 1 万余字灯会讲解词，以展板形式在秦淮灯会展出，服务 20 余位外宾团队。'}
+];
+var AI_WORKS={
+  dims:[
+    {icon:'🛠️',title:'Skill · 个人提效工具',desc:'把重复劳动交给 AI，沉淀可复用的能力单元。',items:['简历自动修改','作品集 / 网站生成','文献阅读与整理','内容创作工作流']},
+    {icon:'🔌',title:'MCP · 想接入的能力',desc:'把外部数据与工具接进 AI 工作流。',items:['行业研报 MCP','企业情报 MCP','个人知识库 MCP','数据看板 MCP']},
+    {icon:'🤖',title:'Agent · 自动助手舰队',desc:'让有用的信息主动找到我。',items:['行业晨报 Agent','竞品动态 Agent','政策雷达 Agent','周报生成 Agent']}
+  ]
+};
+
+document.getElementById('tab-content').innerHTML='<div class="work-grid">'+CONTENT_WORKS.map(function(w){
+  var links=(w.links||[]).map(function(l){return '<a href="#">'+l.t+' ↗</a>';}).join('');
+  return '<div class="work-card">'+
+    '<span class="wk-tag">'+w.tag+'</span>'+
+    '<h4>'+w.title+'</h4>'+
+    '<p>'+w.desc+'</p>'+
+    (links?'<div class="wk-links">'+links+'</div>':'')+
+  '</div>';
+}).join('')+'</div>';
+
+document.getElementById('tab-ai').innerHTML=
+  '<div class="ai-dims">'+AI_WORKS.dims.map(function(d){
+    return '<div class="ai-dim">'+
+      '<div class="dim-icon">'+d.icon+'</div>'+
+      '<h4>'+d.title+'</h4>'+
+      '<p>'+d.desc+'</p>'+
+      '<ul>'+d.items.map(function(it){return '<li>'+it+'</li>';}).join('')+'</ul>'+
+    '</div>';
+  }).join('')+'</div>';
+
+document.querySelectorAll('.portfolio-tab').forEach(function(tab){
+  tab.addEventListener('click',function(){
+    var key=tab.dataset.tab;
+    document.querySelectorAll('.portfolio-tab').forEach(function(t){t.classList.toggle('active',t===tab);});
+    document.querySelectorAll('.portfolio-content').forEach(function(c){c.classList.toggle('active',c.id==='tab-'+key);});
+  });
+});
+
+/* ============================================================
+   5) Honors
+   ============================================================ */
+var CERT_BOOKS=[
+  {icon:'🏆',title:'竞赛与表达',desc:'跨国议题提案、论文写作——把想法讲清楚、写扎实的能力。',
+   items:[
+    {seal:'🏅',title:'MODEL APEC 地区赛一等奖',issuer:'模拟亚太经合组织（MODEL APEC）',pdf:'assets/certs/model_apec_1.png'},
+    {seal:'🏅',title:'MODEL APEC 国赛杰出代表',issuer:'模拟亚太经合组织（MODEL APEC）',pdf:'assets/certs/model_apec_2.png'},
+    {seal:'📝',title:'“京师杯”论文比赛二等奖',issuer:'北京师范大学',pdf:'assets/certs/jingshibei.png'}
+   ]},
+  {icon:'🎓',title:'学业表现',desc:'奖学金与综合荣誉——持续的学习投入与稳定的学业输出。',
+   items:[
+    {seal:'🎓',title:'一等奖学金',issuer:'北京师范大学',pdf:'assets/certs/first_scholarship.png'},
+    {seal:'🌟',title:'三好学生',issuer:'北京师范大学',pdf:'assets/certs/three_good.png'},
+    {seal:'🤍',title:'优秀团员',issuer:'共青团组织',pdf:'assets/certs/excellent_member.png'},
+    {seal:'🏅',title:'优秀学生干部',issuer:'北京师范大学',pdf:'assets/certs/best_student.png'}
+   ]},
+  {icon:'🤝',title:'志愿与社会服务',desc:'从讲解到大型赛会保障，把时间花在与人、与城市相处上。',
+   items:[
+    {seal:'💌',title:'秦淮灯会政府感谢信',issuer:'南京市秦淮区',pdf:'assets/certs/qinhuai_letter.png'},
+    {seal:'📜',title:'秦淮灯会志愿服务证明',issuer:'秦淮灯会组委会',pdf:'assets/certs/qinhuai_service.png'},
+    {seal:'🤝',title:'志愿服务奖',issuer:'白鸽青年志愿者协会',pdf:'assets/certs/volunteer_award.png'},
+    {seal:'⏱️',title:'累计志愿时长证明',issuer:'北京师范大学',pdf:'assets/certs/volunteer_hours_2025.png'},
+    {seal:'📍',title:'第二课堂 75.5 小时',issuer:'南京大学–霍普金斯 SAIS 中美中心',pdf:'assets/certs/nju_volunteer_hours.png'}
+   ]}
+];
+var bookshelf=document.getElementById('bookshelf');
+bookshelf.innerHTML=CERT_BOOKS.map(function(g){
+  var pages=g.items.map(function(it){
+    return '<div class="book-page" data-pdf="'+it.pdf+'" data-title="'+it.title+'">'+
+      '<span class="bp-seal">'+(it.seal||'🏅')+'</span>'+
+      '<div class="bp-info"><div class="bp-title">'+it.title+'</div><div class="bp-issuer">'+it.issuer+'</div></div>'+
+      '<span class="bp-link">查看 PDF ↗</span>'+
+    '</div>';
+  }).join('');
+  return '<div class="book">'+
+    '<div class="book-head">'+
+      '<span class="bk-icon">'+g.icon+'</span>'+
+      '<span class="bk-title">'+g.title+'</span>'+
+      '<span class="bk-count">'+g.items.length+' 个</span>'+
+    '</div>'+
+    pages+
+  '</div>';
+}).join('');
+
+/* Lightbox for honors */
+var lightbox=document.getElementById('lightbox'),lbImg=document.getElementById('lbImg'),lbCap=document.getElementById('lbCap');
+bookshelf.querySelectorAll('.book-page').forEach(function(page){
+  page.addEventListener('click',function(){
+    var pdf=page.dataset.pdf,title=page.dataset.title;
+    window.open(pdf,'_blank');
+    // Also show lightbox preview
+    lbImg.src=pdf;lbImg.style.display='block';lbCap.textContent=title;
+    lightbox.classList.add('show');
+  });
+});
+document.getElementById('lbClose').addEventListener('click',function(){lightbox.classList.remove('show');lbImg.src='';});
+lightbox.addEventListener('click',function(e){if(e.target===lightbox){lightbox.classList.remove('show');lbImg.src='';}});
+
+/* ============================================================
+   6) Typewriter effect
+   ============================================================ */
+var twLines=document.querySelectorAll('.typewriter-line');
+function typeLine(el,cb){
+  var text=el.dataset.text||el.textContent;
+  el.textContent='';el.classList.add('typing');
+  var i=0,ms=45;
+  function step(){
+    if(i<text.length){
+      el.textContent=text.slice(0,i+1);i++;
+      setTimeout(step,ms);
+    }else{
+      el.classList.remove('typing');el.classList.add('done');
+      if(cb)cb();
+    }
+  }
+  step();
+}
+function runTypewriter(idx){
+  if(idx>=twLines.length)return;
+  typeLine(twLines[idx],function(){setTimeout(function(){runTypewriter(idx+1);},360);});
+}
+setTimeout(function(){runTypewriter(0);},600);
+
+/* ============================================================
+   7) Travel footprint map — routes from Lanzhou
+   ============================================================ */
+var TRAVEL={
+  home:{name:'兰州',lat:36.06,lon:103.83},
+  world:[
+    {name:'美国',lat:40.71,lon:-74.0},
+    {name:'日本',lat:35.68,lon:139.69},
+    {name:'韩国',lat:37.57,lon:126.98},
+    {name:'中国台湾',lat:25.03,lon:121.57},
+    {name:'中国香港',lat:22.32,lon:114.17},
+    {name:'中国澳门',lat:22.20,lon:113.54},
+    {name:'成都',lat:30.57,lon:104.07}
+  ],
+  china:[
+    {name:'成都',lat:30.57,lon:104.07},
+    {name:'中国台湾',lat:25.03,lon:121.57},
+    {name:'中国香港',lat:22.32,lon:114.17},
+    {name:'中国澳门',lat:22.20,lon:113.54},
+    {name:'北京',lat:39.90,lon:116.40},
+    {name:'上海',lat:31.23,lon:121.47},
+    {name:'西安',lat:34.34,lon:108.94},
+    {name:'广州',lat:23.13,lon:113.26}
+  ]
+};
+window._flyers=[];
+function drawRoutes(svgSel, projection, places){
+  var svg=d3.select(svgSel);
+  svg.selectAll('*').remove();
+  var mid='arrow_'+svgSel.replace('#','');
+  var defs=svg.append('defs');
+  defs.append('marker').attr('id',mid).attr('viewBox','0 0 10 10')
+    .attr('refX',8).attr('refY',5).attr('markerWidth',6).attr('markerHeight',6)
+    .attr('orient','auto-start-reverse')
+    .append('path').attr('d','M0,0 L10,5 L0,10 z').attr('class','arrow-head');
+  var home=projection([TRAVEL.home.lon,TRAVEL.home.lat]);
+  if(!home)return;
+  svg.append('circle').attr('class','home-ring').attr('cx',home[0]).attr('cy',home[1]).attr('r',4);
+  svg.append('circle').attr('class','home-dot').attr('cx',home[0]).attr('cy',home[1]).attr('r',3.2);
+  svg.append('text').attr('class','home-label').attr('x',home[0]+5).attr('y',home[1]-4).text('兰州');
+  places.forEach(function(p){
+    var d=projection([p.lon,p.lat]);
+    if(!d)return;
+    var dx=d[0]-home[0], dy=d[1]-home[1];
+    var len=Math.sqrt(dx*dx+dy*dy)||1;
+    var nx=-dy/len, ny=dx/len;
+    var bend=Math.min(45,len*0.28);
+    var cx=(home[0]+d[0])/2+nx*bend, cy=(home[1]+d[1])/2+ny*bend;
+    var pathNode=svg.append('path')
+      .attr('class','route')
+      .attr('d','M'+home[0]+','+home[1]+' Q'+cx+','+cy+' '+d[0]+','+d[1])
+      .attr('marker-end','url(#'+mid+')').node();
+    svg.append('circle').attr('class','dest-dot').attr('cx',d[0]).attr('cy',d[1]).attr('r',2.6);
+    var lx=d[0]+(d[0]>=home[0]?5:-45), ly=d[1]+(dy<0?-3:10);
+    svg.append('text').attr('class','dest-label').attr('x',lx).attr('y',ly).text(p.name);
+    var fly=svg.append('circle').attr('class','fly-dot').attr('r',2.4).node();
+    window._flyers.push({path:pathNode,fly:fly,t:Math.random()});
+  });
+}
+function animateFlyers(){
+  function step(){
+    for(var i=0;i<window._flyers.length;i++){
+      var f=window._flyers[i];
+      f.t+=0.005; if(f.t>1)f.t-=1;
+      try{
+        var L=f.path.getTotalLength();
+        var pt=f.path.getPointAtLength(f.t*L);
+        f.fly.setAttribute('cx',pt.x); f.fly.setAttribute('cy',pt.y);
+      }catch(e){}
+    }
+    requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+function renderWorldMap(){
+  var box=document.getElementById('worldBox');
+  if(typeof d3==='undefined'||!window.WORLD_TOPO){box.innerHTML='<p style="padding:24px;color:#889;font-size:13px;text-align:center">地图组件未能加载</p>';return;}
+  var svg=d3.select('#worldSvg');
+  var W=800,H=400;
+  var topo=window.WORLD_TOPO;
+  var countries=topojson.feature(topo,topo.objects.countries).features;
+  var projection=d3.geoNaturalEarth1().fitSize([W,H],{type:'Sphere'});
+  var path=d3.geoPath(projection);
+  var g=svg.append('g');
+  g.append('path').attr('class','sphere').attr('d',path({type:'Sphere'}));
+  g.append('path').attr('class','graticule').attr('d',path(d3.geoGraticule10()));
+  g.selectAll('path.country').data(countries).enter().append('path').attr('class','country').attr('d',path);
+  drawRoutes('#worldSvg',projection,TRAVEL.world);
+}
+function renderChinaMap(){
+  var box=document.getElementById('chinaBox');
+  if(!box)return;
+  if(typeof d3==='undefined'||!window.CHINA_GEO){box.innerHTML='<p style="padding:24px;color:#889;font-size:13px;text-align:center">地图组件未能加载</p>';return;}
+  var svg=d3.select('#chinaSvg');
+  var W=800,H=680;
+  var geo=window.CHINA_GEO;
+  var projection=d3.geoMercator().fitSize([W,H],geo);
+  var path=d3.geoPath(projection);
+  var g=svg.append('g');
+  g.selectAll('path.province').data(geo.features).enter().append('path').attr('class','province').attr('d',path);
+  drawRoutes('#chinaSvg',projection,TRAVEL.china);
+}
+function renderTravelMaps(){
+  if(typeof d3==='undefined')return;
+  renderWorldMap();
+  renderChinaMap();
+  if(!window._travelRAF){window._travelRAF=true;animateFlyers();}
+}
+if(typeof d3!=='undefined'){
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',renderTravelMaps);}
+  else{renderTravelMaps();}
+}
+
+/* ============================================================
+   8) Reading count animation
+   ============================================================ */
+function animateCount(el,target,duration){
+  var start=0;var step=16;
+  var steps=duration/step;var inc=(target-start)/steps;
+  var current=start;var timer=setInterval(function(){
+    current+=inc;
+    if(current>=target){current=target;clearInterval(timer);}
+    el.textContent=Math.floor(current);
+  },step);
+}
+function runCountAnimation(){
+  var el=document.getElementById('readCount');
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        animateCount(el,100,1200);
+        obs.unobserve(el);
+      }
+    });
+  },{threshold:.5});
+  obs.observe(el);
+}
+runCountAnimation();
+
+/* ============================================================
+   9) Mini bookshelf + fly-down favorite book
+   ============================================================ */
+var READING_BOOKS=[
+  {t:'人类简史',a:'尤瓦尔·赫拉利',c:'#6c8cff',h:104,intro:'从认知革命到科学革命，梳理智人如何一步步成为地球的主宰。'},
+  {t:'思考快与慢',a:'丹尼尔·卡尼曼',c:'#f0883e',h:96,intro:'系统1与系统2，揭示人类在决策中反复踩中的认知偏差。'},
+  {t:'纳瓦尔宝典',a:'埃里克·乔根森',c:'#11a89a',h:88,intro:'关于财富与幸福的智慧箴言：杠杆、复利与自我成长的底层逻辑。'},
+  {t:'置身事内',a:'兰小欢',c:'#d6803a',h:100,intro:'用经济学视角，讲清中国地方政府是如何推动经济发展的。'},
+  {t:'原则',a:'瑞·达利欧',c:'#e0689c',h:92,intro:'桥水创始人总结的生活与工作原则，核心是极度求真与极度透明。'},
+  {t:'穷查理宝典',a:'查理·芒格',c:'#8e7cc3',h:110,intro:'多元思维模型与逆向思考，投资与人生的智慧合集。'},
+  {t:'万历十五年',a:'黄仁宇',c:'#9aa0a6',h:84,intro:'以平淡的一年为切面，透视明朝制度运作与衰落的深层逻辑。'},
+  {t:'枪炮、病菌与钢铁',a:'贾雷德·戴蒙德',c:'#7bbf6a',h:128,intro:'从地理与生态出发，解释人类社会为何走上不同的发展轨迹。'},
+  {t:'乡土中国',a:'费孝通',c:'#caa46c',h:90,intro:'剖析中国传统乡村的社会结构与差序格局，理解中国社会的底色。'},
+  {t:'智能简史',a:'麦克斯·班尼特',c:'#2f6fed',h:120,fav:true,
+    intro:'从线虫到人类，作者用 5.5 亿年的进化线索串起「智能」的底层逻辑——那些我们以为人类专属的复杂行为，其实早在两侧对称动物的神经里就已写好。这本书让我重新理解：所谓智能，不是突兀的高塔，而是生命在漫长试错中沉淀下来的生存策略。',
+    quote:'“线虫的智能，就是我们作为动物的底色。以下这些行为逻辑，我们还以为很高大上，殊不知只要是个两侧对称动物、有个脑子就会做——\n1. 趋利避害，但不能只知道向前，得会调整方向；\n2. 整合信息、了解自身，权衡多方意见再做决定；\n3. 持续学习，不能故步自封；\n4. 行为要体现情感，讲个一惯性，不能没心没肺。\n也许这就是生而为动物在世上存活的底层逻辑，这是 5.5 亿年进化验证的最佳策略。”'},
+  {t:'被讨厌的勇气',a:'岸见一郎·古贺史健',c:'#5b9aff',h:108,intro:'用阿德勒心理学讲「课题分离」与自我接纳，如何获得被讨厌的自由。'},
+  {t:'活出意义来',a:'维克多·弗兰克尔',c:'#e0689c',h:96,intro:'集中营幸存者告诉你：人在任何苦难中，都能找到属于自己的生命意义。'},
+  {t:'增长黑客',a:'肖恩·埃利斯',c:'#11a89a',h:94,intro:'用数据与实验驱动用户与业务增长的实战方法论。'},
+  {t:'心流',a:'米哈里·契克森米哈赖',c:'#6c8cff',h:120,intro:'当人完全沉浸在一件事里，那种忘我的「心流」状态，正是幸福的最优体验。'},
+  {t:'认知觉醒',a:'周岭',c:'#f0883e',h:96,intro:'从脑科学出发，谈自我成长与习惯改变背后的底层机制。'},
+  {t:'论中国',a:'亨利·基辛格',c:'#b5483b',h:96,intro:'以战略视角回顾中国的外交智慧，理解大国博弈背后的历史逻辑。'},
+  {t:'在彼处：大使演讲录',a:'傅莹',c:'#3a7ca5',h:148,intro:'外交官演讲集，看中国故事如何被娓娓道来、讲给世界听。'},
+  {t:'看世界',a:'傅莹',c:'#2f6fed',h:96,intro:'收录对国际局势的观察与思考，外交视角下的世界图景。'},
+  {t:'看世界2：百年变局下的挑战和抉择',a:'傅莹',c:'#5b8def',h:172,intro:'面向大变局的全球治理思考，以及中国角色的抉择。'},
+  {t:'我的对面是你：新闻发布会背后的故事',a:'傅莹',c:'#9b59b6',h:180,intro:'复盘重大发布会台前幕后的博弈，外交现场的另一种写法。'},
+  {t:'大使衣橱：外交礼仪之旅',a:'傅莹',c:'#c77dab',h:162,intro:'从着装与礼仪的细节，看外交软实力的讲究与门道。'}
+];
+var shelf=document.getElementById('bookShelf');
+shelf.innerHTML=READING_BOOKS.map(function(b,i){
+  return '<div class="shelf-book'+(b.fav?' fav':'')+'" data-i="'+i+'" style="height:'+b.h+'px;background:'+b.c+'">'+
+    '<span class="spine-title">'+b.t+'</span>'+
+    (b.a?'<span class="spine-author">'+b.a+'</span>':'')+'</div>';
+}).join('');
+var detail=document.getElementById('bookDetail');
+var bdCover=document.getElementById('bdCover');
+var bdTitle=document.getElementById('bdTitle');
+var bdSub=document.getElementById('bdSub');
+var bdIntro=document.getElementById('bdIntro');
+var bdQuote=document.getElementById('bdQuote');
+var openIndex=-1;
+function renderDetail(b){
+  bdCover.textContent=b.t;
+  bdCover.style.background='linear-gradient(135deg,'+b.c+',#5b9aff)';
+  bdTitle.textContent='《'+b.t+'》';
+  bdSub.textContent=b.a+(b.fav?' · 最近最爱':'');
+  bdIntro.textContent=b.intro||'';
+  if(b.quote){ bdQuote.style.display=''; bdQuote.textContent=b.quote; }
+  else { bdQuote.style.display='none'; bdQuote.textContent=''; }
+}
+function openBook(i,manual){
+  var b=READING_BOOKS[i];
+  if(openIndex===i && detail.classList.contains('open')){
+    if(manual) detail.classList.remove('open');
+    return;
+  }
+  try{
+    var src=shelf.querySelector('.shelf-book[data-i="'+i+'"]');
+    var r=src.getBoundingClientRect();
+    var clone=document.createElement('div');
+    clone.className='flying-book';
+    clone.style.background=r.height>110?'linear-gradient(135deg,'+b.c+',#5b9aff)':b.c;
+    clone.style.left=r.left+'px';clone.style.top=r.top+'px';
+    clone.style.width=r.width+'px';clone.style.height=r.height+'px';
+    document.body.appendChild(clone);
+    var dr=detail.getBoundingClientRect();
+    requestAnimationFrame(function(){
+      clone.style.left=(dr.left+18)+'px';
+      clone.style.top=(dr.top+18)+'px';
+      clone.style.width='64px';clone.style.height='104px';
+      clone.style.opacity='0';
+    });
+    setTimeout(function(){ if(clone.parentNode) clone.parentNode.removeChild(clone); },720);
+  }catch(e){}
+  renderDetail(b);
+  openIndex=i;
+  detail.classList.add('open');
+}
+shelf.querySelectorAll('.shelf-book').forEach(function(el){
+  el.addEventListener('click',function(){ openBook(+el.dataset.i,true); });
+});
+var favIndex=READING_BOOKS.findIndex(function(b){return b.fav;});
+var autoShown=false;
+var readingObs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting && !autoShown){ autoShown=true; setTimeout(function(){ if(favIndex>=0) openBook(favIndex,false); },400); readingObs.disconnect(); }
+  });
+},{threshold:0.4});
+readingObs.observe(document.getElementById('readingBlock'));
+
+/* Sports — slide-in-right for the latin dance chip on view */
+var sportObs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); sportObs.unobserve(e.target); } });
+},{threshold:0.3});
+document.querySelectorAll('.sport-chip.slide-right').forEach(function(el){ sportObs.observe(el); });
+</script>
+</body>
+</html>
